@@ -1,0 +1,26 @@
+name: Setup Gatus
+
+on:
+  push:
+    paths:
+      - ansible/gatus_setup.yml
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select the workspace environment (dev)"
+        required: true
+        default: "dev"
+
+jobs:
+  setup-gatus:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Ansible Playbook
+        uses: ansible/ansible-lint-action@v6
+        with:
+          playbook: ansible/gatus_setup.yml
+          extra-vars: >
+            workspace={{ github.event.inputs.environment }}
