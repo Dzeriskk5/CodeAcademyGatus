@@ -3,11 +3,13 @@ name: Setup Gatus
 on:
   push:
     paths:
-      - ansible/gatus_setup.yml
+      - playbooks/docker.yml
+      - roles/docker_setup/**
+
   workflow_dispatch:
     inputs:
       environment:
-        description: "Select the workspace environment (dev)"
+        description: "Select the environment (dev, stage, prod)"
         required: true
         default: "dev"
 
@@ -19,8 +21,5 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run Ansible Playbook
-        uses: ansible/ansible-lint-action@v6
-        with:
-          playbook: ansible/gatus_setup.yml
-          extra-vars: >
-            workspace={{ github.event.inputs.environment }}
+        run: |
+          ansible-playbook -i inventory/${{ github.event.inputs.environment }} playbooks/docker.yml
