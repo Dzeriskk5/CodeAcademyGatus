@@ -1,0 +1,25 @@
+name: Setup Gatus
+
+on:
+  push:
+    paths:
+      - playbooks/docker.yml
+      - roles/docker_setup/**
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select the environment (dev, stage, prod)"
+        required: true
+        default: "dev"
+
+jobs:
+  setup-gatus:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook -i inventory/${{ github.event.inputs.environment }} playbooks/docker.yml
