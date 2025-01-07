@@ -36,3 +36,4 @@ rcterraform.rc
 .MyKeyPair.pem
 
 *.pem
+*.ssh
