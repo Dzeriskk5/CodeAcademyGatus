@@ -34,3 +34,5 @@ rcterraform.rc
 
 .My2KeyPair.pem
 .MyKeyPair.pem
+
+*.pem
