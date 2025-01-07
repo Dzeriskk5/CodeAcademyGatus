@@ -12,5 +12,5 @@ variable "environment" {
 
 variable "key_name" {
     type = string
-    default = "dev-key"
+    default = "mock_ssh"
 }
