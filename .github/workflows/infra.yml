@@ -7,9 +7,9 @@ on:
                 type: choice
                 description: Environment
                 options:
-                    - Dev
-                    - Stage
-                    - Prod
+                    - dev
+                    - stage
+                    - prod
                     - all
                 default: test
             action:
