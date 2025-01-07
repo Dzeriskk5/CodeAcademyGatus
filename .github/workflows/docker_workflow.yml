@@ -15,12 +15,6 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Adding user to Docker group
-              user:
-                name: ubuntu
-                groups: docker
-                append: yes
-
         #Checkout code so that the palybook is accessible
             - name: Checkout code
               uses: actions/checkout@v3
