@@ -15,6 +15,12 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
+            - name: Adding user to Docker group
+              user:
+                name: ubuntu
+                groups: docker
+                append: yes
+
         #Checkout code so that the palybook is accessible
             - name: Checkout code
               uses: actions/checkout@v3
@@ -22,5 +28,11 @@ jobs:
             - name: Install Ansible
               run: sudo apt-get update && sudo apt-get install -y ansible
 
+            - name: Setup SSH key for connection to AWS VM
+              run: |
+                mkdir -p ~/.ssh
+                echo "${{secrets.AWS_SSH_KEY}}" > ~/.ssh/id_rsa
+                chmod 600 ~/.ssh/id_rsa
+
             - name: Run ansible playbook to install Docker
-              run: ansible-playbook -u ubuntu -i 52.59.178.251, --private-key ${{secrets.AWS_SSH_KEY}} install_docker.yml
+              run: ansible-playbook -u ubuntu -i 52.59.178.251, --private-key ~/.ssh/id_rsa CodeAcademyGatus/ansible/install_docker.yml
