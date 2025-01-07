@@ -14,10 +14,6 @@ jobs:
     install-docker:
         runs-on: ubuntu-latest
 
-        defaults:
-          run:
-            working-directory: ./Ansible
-
         steps:
         #Checkout code so that the palybook is accessible
             - name: Checkout code
