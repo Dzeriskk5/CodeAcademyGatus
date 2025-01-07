@@ -1,0 +1,67 @@
+name: Terraform plan / apply / destroy
+
+on:
+    workflow_dispatch:
+        inputs:
+            environment:
+                type: choice
+                description: Environment
+                options:
+                    - dev
+                    - stage
+                    - prod
+                    - all
+                default: test
+            action:
+                description: Choose plan/apply or destroy
+                required: true
+                default: "plan/apply"
+                type: choice
+                options:
+                    - plan/apply
+                    - destroy
+jobs:
+    terraform:
+        name: Terraform plan/apply/destroy
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./Infra/dev
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v2
+              with:
+                terraform_version: 1.5.6
+
+            - name: Export AWS credentials
+              run: |
+                echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+                echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+                echo "AWS_DEFAULT_REGION=eu-central-1" >> $GITHUB_ENV
+
+            - name: Terraform init
+              run: terraform init
+
+            - name: Terraform Validate
+              run: terraform validate
+
+            - name: Perform chosen action
+              env:
+                AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              run: |
+                if [ "${{ github.event.inputs.action }}" == "plan/apply" ]; then
+                  terraform plan -var-file=${{ github.event.inputs.environment }}.tfvars;
+                  terraform apply -auto-approve -var-file=${{ github.event.inputs.environment }}.tfvars;
+                elif [ "${{ github.event.inputs.action }}" == "destroy" ]; then
+                  terraform destroy -auto-approve -var-file=${{ github.event.inputs.environment }}.tfvars;
+                else
+                  echo "Invalid action: ${{ github.event.inputs.action }}";
+                  exit 1;
+                fi
+
+
+            
