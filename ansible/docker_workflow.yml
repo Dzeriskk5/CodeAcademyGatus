@@ -1,0 +1,25 @@
+name: Setup Docker on the VM with Ansible
+
+on:
+    workflow_dispatch:
+        inputs:
+            environment:
+                type: choice
+                description: Butaforinis pasirinkimas
+                options:
+                    - dev
+                default: dev
+jobs:
+    install-docket:
+        runs-on: ubuntu-latest
+
+        steps:
+        #Checkout code so that the palybook is accessible
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Install Ansible
+              run: sudo apt-get update && sudo apt-get install -y ansible
+
+            - name: Run ansible playbook to install Docker
+              run: ansible-playbook -u ubuntu -i 52.59.178.251, --private-key ${secrets.AWS_SSH_KEY} install_docker.yml
