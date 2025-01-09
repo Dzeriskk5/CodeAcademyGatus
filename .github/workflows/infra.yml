@@ -76,19 +76,23 @@ jobs:
               run: |
                 # Trinam viską iš kibiro pt1
                 aws s3api list-object-versions --bucket mock-tfstate-bucket --query "Versions[].{Key:Key,VersionId:VersionId}" --output json > delete-versions.json
-                for version in $(cat delete-versions.json | jq -c '.[]'); do
-                  key=$(echo $version | jq -r '.Key')
-                  versionId=$(echo $version | jq -r '.VersionId')
-                  aws s3api delete-object --bucket mock-tfstate-bucket --key "$key" --version-id "$versionId"
-                done
+                if [ -s delete-versions.json ]; then
+                    for version in $(cat delete-versions.json | jq -c '.[]'); do
+                      key=$(echo $version | jq -r '.Key')
+                      versionId=$(echo $version | jq -r '.VersionId')
+                      aws s3api delete-object --bucket mock-tfstate-bucket --key "$key" --version-id "$versionId"
+                    done
+                fi
 
                 # Trinam viską iš kibiro pt2
                 aws s3api list-object-versions --bucket mock-tfstate-bucket --query "DeleteMarkers[].{Key:Key,VersionId:VersionId}" --output json > delete-markers.json
-                for marker in $(cat delete-markers.json | jq -c '.[]'); do
-                  key=$(echo $marker | jq -r '.Key')
-                  versionId=$(echo $marker | jq -r '.VersionId')
-                  aws s3api delete-object --bucket mock-tfstate-bucket --key "$key" --version-id "$versionId"
-                done
+                if [ -s delete-markers.json ]; then
+                    for marker in $(cat delete-markers.json | jq -c '.[]'); do
+                      key=$(echo $marker | jq -r '.Key')
+                      versionId=$(echo $marker | jq -r '.VersionId')
+                      aws s3api delete-object --bucket mock-tfstate-bucket --key "$key" --version-id "$versionId"
+                    done
+                fi
 
                 # Tikrinam ar kibiras tuščias
                 remaining_objects=$(aws s3api list-objects-v2 --bucket mock-tfstate-bucket --query "Contents[].Key" --output json)
