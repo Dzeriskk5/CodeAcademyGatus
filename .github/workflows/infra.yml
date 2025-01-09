@@ -42,6 +42,14 @@ jobs:
                 echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
                 echo "AWS_DEFAULT_REGION=eu-central-1" >> $GITHUB_ENV
 
+            - name: Create S3 bucket and dynamodb table if chose plan/apply
+              if: ${{ github.event.inputs.action == 'plan/apply' }}
+              run: |
+              aws s3api create-bucket --bucket mock-tfstate-bucket --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1 || true
+              aws s3api put-bucket-versioning --bucket mock-tfstate-bucket --versioning-configuration Status=Enabled
+              aws s3api put-bucket-encryption --bucket mock-tfstate-bucket --server-side-encryption-configuration '{ "Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]}'
+              aws dynamodb create-table --table-name mock-tfstate-lock --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 || true
+
             - name: Terraform init
               run: terraform init
 
@@ -62,6 +70,13 @@ jobs:
                   echo "Invalid action: ${{ github.event.inputs.action }}";
                   exit 1;
                 fi
+            - name: Delete S3 bucket and dynamodb table if chosen destroy
+              if: ${{ github.event.inputs.action == 'destroy' }}
+              run: |
+                aws s3api delete-objects --bucket mock-tfstate-bucket --delete "$(aws s3api list-object-versions --bucket mock-tfstate-bucket --query='{Objects: Versions[].{Key:Key,VresionId:VersionId}}')"
+                aws s3api delete-bucket --bucket mock-tfsate-bucket --region eu-central-1 || true
+                aws dynamodb delete-table --table-name mock-tfstate-lock || true
+
 
 
             
