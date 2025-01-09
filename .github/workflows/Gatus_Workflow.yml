@@ -12,7 +12,7 @@ on:
 
     workflow_run:
       workflows:
-        - docker_install.yml
+        - Setup Docker on the VM with Ansible
       types:
         - completed
 
