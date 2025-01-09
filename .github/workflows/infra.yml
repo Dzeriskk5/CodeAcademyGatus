@@ -73,7 +73,7 @@ jobs:
             - name: Delete S3 bucket and dynamodb table if chosen destroy
               if: ${{ github.event.inputs.action == 'destroy' }}
               run: |
-                aws s3api delete-objects --bucket mock-tfstate-bucket --delete "$(aws s3api list-object-versions --bucket mock-tfstate-bucket --query='{Objects: Versions[].{Key:Key,VresionId:VersionId}}')"
+                aws s3api delete-objects --bucket mock-tfstate-bucket --delete "$(aws s3api list-object-versions --bucket mock-tfstate-bucket --query='{Objects: Versions[].{Key:Key,VersionId:VersionId}}')"
                 aws s3api delete-bucket --bucket mock-tfsate-bucket --region eu-central-1 || true
                 aws dynamodb delete-table --table-name mock-tfstate-lock || true
 
