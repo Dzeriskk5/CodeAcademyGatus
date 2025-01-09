@@ -1,7 +1,7 @@
 endpoints:
   - name: wesite                 # Name of your endpoint, can be anything
     url: "https://twin.sh/health"
-    interval: 5m                  # Duration to wait between every status check (default: 60s)
+    interval: 30s                  # Duration to wait between every status check (default: 60s)
     conditions:
       - "[STATUS] == 200"         # Status must be 200
       - "[BODY].status == UP"     # The json path "$.status" must be equal to UP
@@ -10,7 +10,7 @@ endpoints:
   - name: back-end
     group: core
     url: "https://example.org/"
-    interval: 5m
+    interval: 30s
     conditions:
       - "[STATUS] == 200"
       - "[CERTIFICATE_EXPIRATION] > 48h"
@@ -18,20 +18,20 @@ endpoints:
   - name: monitoring
     group: internal
     url: "https://example.org/"
-    interval: 5m
+    interval: 30s
     conditions:
       - "[STATUS] == 200"
 
-  - name: nas
+  - name: LRT
     group: internal
-    url: "https://example.org/"
-    interval: 5m
+    url: "https://lrt.lt/"
+    interval: 30s
     conditions:
       - "[STATUS] == 200"
 
   - name: example-dns-query
     url: "8.8.8.8" # Address of the DNS server to use
-    interval: 5m
+    interval: 30s
     dns:
       query-name: "example.com"
       query-type: "A"
@@ -41,13 +41,13 @@ endpoints:
 
   - name: icmp-ping
     url: "icmp://example.org"
-    interval: 1m
+    interval: 30s
     conditions:
       - "[CONNECTED] == true"
 
   - name: check-domain-expiration
     url: "https://example.org/"
-    interval: 1h
+    interval: 30s
     conditions:
       - "[DOMAIN_EXPIRATION] > 720h"
  
