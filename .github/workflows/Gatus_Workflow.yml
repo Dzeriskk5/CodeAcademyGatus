@@ -1,14 +1,14 @@
 name: Setup Gatus on the VM with Ansible
 
 on:
-    #workflow_dispatch:
-    #    inputs:
-    #        environment:
-    #            type: choice
-    #            description: Butaforinis pasirinkimas 2
-    #            options:
-    #                - dev
-    #            default: dev
+    workflow_dispatch:
+        inputs:
+            environment:
+                type: choice
+                description: Butaforinis pasirinkimas 2
+                options:
+                    - dev
+                default: dev
 
     workflow_run:
       workflows:
