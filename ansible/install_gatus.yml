@@ -2,10 +2,10 @@
   hosts: all
   become: true
   tasks:
-    - name: Ensure Docker is installed
-      apt:
-        name: docker.io
-        state: present
+    # - name: Ensure Docker is installed
+    #   apt:
+    #     name: docker.io
+    #     state: present
 
     - name: Start Docker service
       service:
