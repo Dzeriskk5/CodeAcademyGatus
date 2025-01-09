@@ -7,6 +7,22 @@
     #     name: docker.io
     #     state: present
 
+    - name: Create a directory
+      ansible.builtin.file:
+        path: /home/ubuntu/config
+        state: directory
+        mode: '0755'
+        owner: ubuntu
+        group: docker
+
+    - name: Copy file with new permissions
+      ansible.builtin.copy:
+        src: ansible/config.gatus.yaml
+        dest: /home/ubuntu/Gatusconfig/config.yaml
+        mode: '0644'
+        owner: ubuntu
+        group: docker
+
     - name: Start Docker service
       service:
         name: docker
@@ -16,10 +32,6 @@
     - name: Pull the Gatus Docker image
       command: docker pull twinproduction/gatus
       register: pull_result
-
-    - name: Display pull result
-      debug:
-        var: pull_result.stdout
 
     # Stop and remove existing Gatus container (if any)
     - name: Remove existing Gatus container (if running)
@@ -35,6 +47,15 @@
         state: started
         ports:
           - "8080:8080"  # Map host port 8080 to container port 8080
+        mounts:
+          - type: bind
+            source: /home/ubuntu/Gatusconfig/config.yaml
+            target: /config/config.yaml
         env:
           GATUS_IP: "0.0.0.0"  # Optional: Set Gatus IP (adjust as needed)
         restart_policy: always
+        restart: true
+
+    - name: Display pull result
+      debug:
+        var: pull_result.stdout
