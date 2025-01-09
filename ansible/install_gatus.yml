@@ -17,8 +17,8 @@
 
     - name: Copy file with new permissions
       ansible.builtin.copy:
-        src: ansible/config.gatus.yaml
-        dest: /home/ubuntu/Gatusconfig/config.yaml
+        src: ansible/ConfigGatus.yaml
+        dest: /home/ubuntu/config/config.yaml
         mode: '0644'
         owner: ubuntu
         group: docker
@@ -49,7 +49,7 @@
           - "8080:8080"  # Map host port 8080 to container port 8080
         mounts:
           - type: bind
-            source: /home/ubuntu/Gatusconfig/config.yaml
+            source: /home/ubuntu/config/config.yaml
             target: /config/config.yaml
         env:
           GATUS_IP: "0.0.0.0"  # Optional: Set Gatus IP (adjust as needed)
