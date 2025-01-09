@@ -21,8 +21,20 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v3
 
-            - name: Install Ansible
-              run: sudo apt-get update && sudo apt-get install -y ansible
+            - name: Create SSH directory
+              run: mkdir -p ~/.ssh
+
+            - name: Add host to known_hosts
+              run: ssh-keyscan -H 3.76.114.159 >> ~/.ssh/known_hosts
+
+            - name: Check and Install Ansible
+              run: |
+                if ! command -v ansible &> /dev/null; then
+                  echo "Ansible not found. Installing..."
+                  sudo apt-get update && sudo apt-get install -y ansible
+                else
+                  echo "Ansible is already installed."
+                fi
 
             - name: Setup SSH key for connection to AWS VM
               run: |
