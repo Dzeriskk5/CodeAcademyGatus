@@ -47,7 +47,7 @@ endpoints:
 
   - name: check-domain-expiration
     url: "https://example.org/"
-    interval: 30s
+    interval: 5m
     conditions:
       - "[DOMAIN_EXPIRATION] > 720h"
  
