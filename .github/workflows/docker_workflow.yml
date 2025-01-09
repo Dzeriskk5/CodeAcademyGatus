@@ -35,6 +35,11 @@ jobs:
                 else
                   echo "Ansible is already installed."
                 fi
+            - name: Ensure everything is up to date
+              run: |
+                sudo dpkg --configure -a
+                sudo apt-get update --fix-missing
+                sudo apt-get -f install 
 
             - name: Setup SSH key for connection to AWS VM
               run: |

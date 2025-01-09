@@ -2,17 +2,10 @@
   hosts: all
   become: true
   tasks:
-    - name: Ensure Docker is installed
-      apt:
-        name: docker.io
-        state: present
-      when: ansible_os_family == "Debian"
-
-    - name: Ensure Docker is installed (Red Hat)
-      yum:
-        name: docker
-        state: present
-      when: ansible_os_family == "RedHat"
+    # - name: Ensure Docker is installed
+    #   apt:
+    #     name: docker.io
+    #     state: present
 
     - name: Start Docker service
       service:
@@ -27,3 +20,21 @@
     - name: Display pull result
       debug:
         var: pull_result.stdout
+
+    # Stop and remove existing Gatus container (if any)
+    - name: Remove existing Gatus container (if running)
+      docker_container:
+        name: gatus
+        state: absent
+
+    # Run Gatus container
+    - name: Start Gatus Docker container
+      docker_container:
+        name: gatus
+        image: twinproduction/gatus:latest
+        state: started
+        ports:
+          - "8080:8080"  # Map host port 8080 to container port 8080
+        env:
+          GATUS_IP: "0.0.0.0"  # Optional: Set Gatus IP (adjust as needed)
+        restart_policy: always
