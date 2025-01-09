@@ -21,6 +21,9 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v3
 
+            - name: Create SSH directory
+              run: mkdir -p ~/.ssh
+
             - name: Add host to known_hosts
               run: ssh-keyscan -H 3.76.114.159 >> ~/.ssh/known_hosts
 
