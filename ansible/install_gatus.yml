@@ -6,13 +6,6 @@
       apt:
         name: docker.io
         state: present
-      when: ansible_os_family == "Debian"
-
-    - name: Ensure Docker is installed (Red Hat)
-      yum:
-        name: docker
-        state: present
-      when: ansible_os_family == "RedHat"
 
     - name: Start Docker service
       service:
