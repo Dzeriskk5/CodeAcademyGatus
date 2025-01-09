@@ -9,6 +9,13 @@ on:
                 options:
                     - dev
                 default: dev
+
+    workflow_run:
+      workflows:
+        - docker_install.yml
+      types:
+        - completed
+
 jobs:
 
     install-docker:
