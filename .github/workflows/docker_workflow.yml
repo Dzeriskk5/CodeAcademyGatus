@@ -31,4 +31,4 @@ jobs:
                 chmod 600 ~/.ssh/id_rsa
 
             - name: Run ansible playbook to install Docker
-              run: ansible-playbook -u ubuntu -i 52.59.178.251, --private-key ~/.ssh/id_rsa install_docker.yml
+              run: ansible-playbook -u ubuntu -i 3.126.101.111, --private-key ~/.ssh/id_rsa install_docker.yml
