@@ -54,13 +54,6 @@
         state: started
         enabled: true
 
-    # Add current user to the Docker group
-    - name: Add user to the docker group
-      user:
-        name: "{{ ansible_user }}"
-        groups: docker
-        append: true
-
     # Ensure user is added to the Docker group
     - name: Print logout message
       debug:
