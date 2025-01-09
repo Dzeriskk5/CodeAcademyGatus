@@ -38,4 +38,4 @@ jobs:
                 chmod 600 ~/.ssh/id_rsa
 
             - name: Run Gatus playbook to install Gatus
-              run: ansible-playbook -u ubuntu -i 3.126.101.111, --private-key ~/.ssh/id_rsa gatus.yml
+              run: ansible-playbook -u ubuntu -i 3.76.114.159, --private-key ~/.ssh/id_rsa install_gatus.yml
